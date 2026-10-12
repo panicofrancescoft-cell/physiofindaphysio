@@ -533,15 +533,23 @@ async function submitProf(){
     return;
   }
 
-  const { data: authData, error: authError } = await sb.auth.signUp({ email, password });
-  if(authError){ showToast("Errore nella creazione dell'account: " + authError.message); return; }
-  if(!authData.user){ showToast("Controlla la tua email per confermare l'account, poi accedi da 'Accedi'."); return; }
+  let userId;
+  if(currentUser){
+    // già loggato (es. account creato in precedenza ma profilo non ancora compilato)
+    userId = currentUser.id;
+  } else {
+    const { data: authData, error: authError } = await sb.auth.signUp({ email, password });
+    if(authError){ showToast("Errore nella creazione dell'account: " + authError.message); return; }
+    if(!authData.session){ showToast("Account creato: controlla la tua email per confermarlo, poi accedi da 'Accedi' per completare il profilo."); return; }
+    currentUser = authData.user;
+    userId = authData.user.id;
+  }
 
-  payload.user_id = authData.user.id;
+  payload.user_id = userId;
   const { error } = await sb.from("professionisti").insert(payload);
   if(error){
     console.error(error);
-    showToast("Account creato ma errore nel salvataggio profilo: " + error.message);
+    showToast("Errore nel salvataggio profilo: " + error.message);
     return;
   }
 
