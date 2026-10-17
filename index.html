@@ -92,6 +92,7 @@
   .steps{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:20px;}
   .step{ border-top:2px solid var(--sage); padding-top:10px;}
   .step .num{ font-family:'IBM Plex Mono'; font-size:12px; color:var(--sage);}
+  .step .step-text{ font-family:'Fraunces',serif; font-size:17px; line-height:1.35; color:var(--petrol-900); margin-top:8px; max-width:none; }
   .step h3{ font-size:16px; margin-top:6px; color:var(--petrol-900);}
   .step p{ font-size:13.5px; color:var(--ink-soft); margin-top:6px; line-height:1.5;}
   @media(max-width:640px){ .steps{ grid-template-columns:1fr; } }
@@ -240,9 +241,9 @@
       </div>
 
       <div class="steps">
-        <div class="step"><div class="num mono">01</div><h3>Iscriviti</h3><p>Ed entra nella rete di professionisti sanitari.</p></div>
-        <div class="step"><div class="num mono">02</div><h3>Cerca</h3><p>Il collega che fa al caso del tuo paziente.</p></div>
-        <div class="step"><div class="num mono">03</div><h3>Vieni trovato</h3><p>Un collega può trovarti nella rete in base alle tue caratteristiche e localizzazione.</p></div>
+        <div class="step"><div class="num mono">01</div><p class="step-text">Iscriviti ed entra nella rete di professionisti sanitari.</p></div>
+        <div class="step"><div class="num mono">02</div><p class="step-text">Cerca il collega che fa al caso del tuo paziente.</p></div>
+        <div class="step"><div class="num mono">03</div><p class="step-text">Un collega può trovarti nella rete in base alle tue caratteristiche e localizzazione.</p></div>
       </div>
 
     </div>
