@@ -41,6 +41,12 @@
   }
   .brand h1{ font-size:19px; color:var(--petrol-900); }
   .brand-accent{ color:var(--ocher); }
+  @media(max-width:640px){
+    header{ flex-wrap:wrap; padding:12px 14px; gap:8px; }
+    .brand h1{ font-size:16px; }
+    nav{ width:100%; gap:2px; }
+    nav button{ flex:1; padding:8px 4px; font-size:13px; }
+  }
   nav{ display:flex; gap:4px; }
   nav button{
     border:none; background:transparent; padding:8px 14px; border-radius:20px;
@@ -195,7 +201,7 @@
 <body>
 
 <header>
-  <div class="brand">
+  <div class="brand" onclick="switchPanel('home')" style="cursor:pointer;" title="Torna alla home">
     <div class="brand-mark">
       <svg viewBox="0 0 40 40" width="34" height="34">
         <circle cx="16" cy="18" r="13" fill="var(--petrol-900)"/>
@@ -206,7 +212,6 @@
     <h1>Physio <span class="brand-accent">Network</span> Italia</h1>
   </div>
   <nav>
-    <button data-panel="home" class="active">Home</button>
     <button data-panel="cerca">Trova</button>
     <button data-panel="annunci">Annunci</button>
     <button data-panel="iscrizione">Iscriviti</button>
