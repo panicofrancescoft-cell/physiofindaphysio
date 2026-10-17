@@ -68,8 +68,26 @@
   @media(max-width:760px){ .hero-grid{ grid-template-columns:1fr; } }
   .hero-media{ border-radius:16px; overflow:hidden; border:1px solid var(--line); background:var(--paper-dim); }
   .hero-media img{ width:100%; height:100%; object-fit:cover; display:block; max-height:340px; }
-  .hero-illustration{ aspect-ratio:420/320; display:flex; }
-  .hero-illustration svg{ display:block; }
+  .hero-banner{
+    border-radius:20px; overflow:hidden; padding:34px 28px; color:#fff; min-height:380px; display:flex; align-items:center;
+    background:
+      linear-gradient(100deg, rgba(36,30,78,0.80) 0%, rgba(36,30,78,0.55) 55%, rgba(36,30,78,0.35) 100%),
+      url('hero.jpg') center/cover no-repeat,
+      linear-gradient(135deg, #241E4E, #3D3480);
+  }
+  .hero-banner .hero-grid{ width:100%; }
+  .hero-banner h2{ color:#fff; text-shadow:0 2px 14px rgba(0,0,0,0.35); }
+  .hero-banner .hero-text p{ color:rgba(255,255,255,0.92); text-shadow:0 1px 8px rgba(0,0,0,0.35); }
+  .hero-banner .eyebrow{ color:#FFB4A3; }
+  .hero-banner .btn-ghost{ border-color:rgba(255,255,255,0.85); color:#fff; }
+  .hero-ann{ background:rgba(255,255,255,0.96); border-radius:14px; padding:16px 18px; color:var(--ink); box-shadow:0 8px 30px rgba(20,15,50,0.25); }
+  .hero-ann-head{ display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
+  .hero-ann-head h3{ font-size:18px; color:var(--petrol-900); }
+  .hero-ann .ann-note{ font-size:12.5px; color:var(--ink-soft); margin:4px 0 8px; line-height:1.4; max-width:none; }
+  .ann-mini{ display:flex; justify-content:space-between; gap:10px; align-items:baseline; padding:10px 0; border-top:1px solid var(--line); cursor:pointer; }
+  .ann-mini .t{ font-weight:600; font-size:14px; color:var(--petrol-900); }
+  .ann-mini .z{ font-size:12.5px; color:var(--ink-soft); }
+  .ann-mini .d{ font-size:11px; color:var(--ink-soft); white-space:nowrap; }
 
   .steps{ display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin-top:20px;}
   .step{ border-top:2px solid var(--sage); padding-top:10px;}
@@ -152,6 +170,19 @@
   .confirm-choice button.yes:hover, .confirm-choice button.yes.picked{ background:var(--sage); color:#fff; border-color:var(--sage); }
   .confirm-choice button.no:hover, .confirm-choice button.no.picked{ background:#C0453A; color:#fff; border-color:#C0453A; }
 
+  /* annunci */
+  .ann-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:12px; margin-top:14px; }
+  .ann-card{ background:#fff; border:1px solid var(--line); border-radius:12px; padding:16px; display:flex; flex-direction:column; gap:8px; }
+  .ann-tipo{ font-family:'Fraunces',serif; font-size:17px; color:var(--petrol-900); }
+  .ann-zona{ font-size:13px; color:var(--ink-soft); }
+  .ann-date{ font-size:11px; color:var(--ink-soft); }
+  .ann-detail{ background:var(--paper-dim); border-left:3px solid var(--sage); padding:10px 12px; border-radius:0 8px 8px 0; font-size:13px; line-height:1.5; white-space:pre-wrap; }
+  .ann-status{ font-size:12px; color:var(--ink-soft); }
+  .btn-small{ padding:8px 14px; font-size:13px; }
+  .incoming-box{ background:#fff; border:1px solid var(--ocher); border-radius:12px; padding:16px; margin-bottom:18px; }
+  .incoming-row{ display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; padding:8px 0; border-top:1px solid var(--line); font-size:13px; }
+  .incoming-row:first-of-type{ border-top:none; }
+
   .toast{
     position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
     background:var(--petrol-900); color:var(--paper); padding:12px 20px; border-radius:8px;
@@ -176,6 +207,7 @@
   <nav>
     <button data-panel="home" class="active">Home</button>
     <button data-panel="cerca">Trova</button>
+    <button data-panel="annunci">Annunci</button>
     <button data-panel="iscrizione">Iscriviti</button>
     <button data-panel="accedi">Accedi</button>
   </nav>
@@ -185,8 +217,9 @@
 
   <section class="panel active" id="home">
     <div class="hero">
+      <div class="hero-banner">
       <div class="hero-grid">
-        <div>
+        <div class="hero-text">
           <span class="eyebrow">Physio Network Italia</span>
           <h2>La rete che collega chi cura a chi può curare meglio.</h2>
           <p>Quando un paziente ha bisogno di competenze che non hai, non perderlo: trovi il collega giusto per specializzazione, area geografica e tipo di caso, e resti comunque il punto di riferimento della sua cura.</p>
@@ -195,61 +228,22 @@
             <button class="btn btn-ghost" onclick="switchPanel('iscrizione')">Iscriviti alla rete</button>
           </div>
         </div>
-        <div class="hero-media hero-illustration">
-          <svg viewBox="0 0 420 320" width="100%" height="100%" role="img" aria-label="Illustrazione di due fisioterapisti che si stringono la mano">
-            <defs>
-              <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#EFE9FB"/>
-                <stop offset="100%" stop-color="#FDEEE9"/>
-              </linearGradient>
-            </defs>
-            <rect x="0" y="0" width="420" height="320" rx="20" fill="url(#bgGrad)"/>
-
-            <!-- rete di sfondo -->
-            <g stroke="#241E4E" stroke-opacity="0.12" stroke-width="1.5">
-              <line x1="30" y1="40" x2="80" y2="70"/>
-              <line x1="360" y1="50" x2="330" y2="90"/>
-              <line x1="40" y1="270" x2="90" y2="240"/>
-              <line x1="380" y1="260" x2="340" y2="230"/>
-            </g>
-            <g fill="#FF6A4D" fill-opacity="0.55">
-              <circle cx="30" cy="40" r="4"/>
-              <circle cx="360" cy="50" r="4"/>
-              <circle cx="40" cy="270" r="4"/>
-              <circle cx="380" cy="260" r="4"/>
-            </g>
-
-            <!-- figura sinistra -->
-            <g>
-              <path d="M60 300 C60 235 90 200 150 200 C210 200 220 235 222 300 Z" fill="#241E4E"/>
-              <circle cx="141" cy="150" r="38" fill="#E8B98F"/>
-              <path d="M103 150 a38 38 0 0 1 76 0 c0 -26 -18 -40 -38 -40 c-20 0 -38 14 -38 40 Z" fill="#3D3480"/>
-              <path d="M150 205 q35 5 45 45 q-15 18 -42 8 Z" fill="#2A2358"/>
-            </g>
-
-            <!-- figura destra -->
-            <g>
-              <path d="M360 300 C360 235 330 200 270 200 C210 200 200 235 198 300 Z" fill="#FF6A4D"/>
-              <circle cx="281" cy="150" r="38" fill="#C98B62"/>
-              <path d="M319 150 a38 38 0 0 0 -76 0 c0 -26 18 -40 38 -40 c20 0 38 14 38 40 Z" fill="#1C1730"/>
-              <path d="M270 205 q-35 5 -45 45 q15 18 42 8 Z" fill="#E14E30"/>
-            </g>
-
-            <!-- braccia e stretta di mano -->
-            <path d="M190 225 Q205 245 208 262" stroke="#E8B98F" stroke-width="16" stroke-linecap="round" fill="none"/>
-            <path d="M232 225 Q217 245 214 262" stroke="#C98B62" stroke-width="16" stroke-linecap="round" fill="none"/>
-            <ellipse cx="211" cy="264" rx="15" ry="11" fill="#DDAE81"/>
-
-            <!-- banda elastica, dettaglio physio -->
-            <path d="M96 230 Q141 260 186 232" stroke="#22C3A6" stroke-width="6" fill="none" stroke-linecap="round" opacity="0.85"/>
-          </svg>
+        <div class="hero-ann">
+          <div class="hero-ann-head">
+            <h3>Ultimi annunci</h3>
+            <span class="link-btn" onclick="switchPanel('annunci')">Vedi tutti →</span>
+          </div>
+          <p class="ann-note">Pazienti che i colleghi cercano di indirizzare. I dettagli sono riservati agli iscritti.</p>
+          <div id="home-annunci-list"></div>
         </div>
+      </div>
       </div>
 
       <div class="steps">
         <div class="step"><div class="num mono">01</div><h3>Ti iscrivi</h3><p>Specializzazioni, area geografica, modalità di lavoro e pazienti che vuoi ricevere.</p></div>
         <div class="step"><div class="num mono">02</div><h3>Vieni trovato</h3><p>Un collega ti cerca per filtri e ti contatta direttamente.</p></div>
       </div>
+
     </div>
   </section>
 
@@ -271,6 +265,33 @@
 
     <div class="results-count mono" id="results-count"></div>
     <div id="results"></div>
+  </section>
+
+  <section class="panel" id="annunci">
+    <h2 style="color:var(--petrol-900); font-size:26px; margin-bottom:6px;">Annunci</h2>
+    <p style="color:var(--ink-soft); font-size:14px; margin-bottom:16px;">Qui compaiono solo il tipo di paziente e la zona. I dettagli completi li vede chi è iscritto con membership attiva e ne fa richiesta, dopo l'approvazione di chi ha pubblicato.</p>
+
+    <button class="btn btn-primary" onclick="toggleAnnForm()" style="margin-bottom:16px;">Pubblica un annuncio</button>
+
+    <div class="card" id="ann-form" style="display:none; margin-bottom:20px;">
+      <div class="notice error">
+        Non inserire nome, cognome, contatti o altri dati che identificano il paziente: i dati sanitari sono tutelati dal GDPR. Descrivi solo il quadro clinico in modo anonimo.
+      </div>
+      <div class="row2">
+        <div class="field"><label>Tipo di paziente</label>
+          <select id="ann-tipo"><option value="">Seleziona...</option></select>
+        </div>
+        <div class="field"><label>Zona richiesta</label><input type="text" id="ann-zona" placeholder="Es. Napoli, Vomero"></div>
+      </div>
+      <div class="field"><label>Dettagli (visibili solo ai colleghi approvati da te)</label>
+        <textarea id="ann-dettagli" placeholder="Quadro clinico in forma anonima, tempistiche, modalità (studio/domicilio), eventuali note..."></textarea>
+      </div>
+      <button class="btn btn-primary" onclick="publishAnnuncio()">Pubblica annuncio</button>
+      <button class="btn btn-ghost" onclick="toggleAnnForm()" style="margin-left:8px;">Annulla</button>
+    </div>
+
+    <div id="ann-incoming"></div>
+    <div class="ann-grid" id="ann-list"></div>
   </section>
 
   <section class="panel" id="iscrizione">
@@ -428,6 +449,7 @@ let selectedSpec = new Set();
 let selectedPaz = new Set();
 let selectedCorsi = new Set();
 let currentUser = null;
+let currentProf = null;
 let editingProfId = null;
 
 function buildChips(containerId, items, targetSet){
@@ -474,6 +496,7 @@ function switchPanel(name){
   document.getElementById(name).classList.add("active");
   document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active", b.dataset.panel===name));
   if(name==="cerca") loadResults();
+  if(name==="annunci") loadAnnunci();
 }
 
 function showToast(msg){
@@ -554,7 +577,8 @@ async function submitProf(){
   }
 
   showToast("Profilo creato. Attiva la membership per comparire nella ricerca.");
-  resetForm();
+  document.getElementById("in-password").value = "";
+  await loadOwnProfileIntoForm();
   switchPanel("iscrizione");
 }
 
@@ -590,6 +614,7 @@ async function login(){
 async function logout(){
   await sb.auth.signOut();
   currentUser = null;
+  currentProf = null;
   editingProfId = null;
   resetForm();
   document.getElementById("in-prof").value = "Fisioterapista";
@@ -609,6 +634,7 @@ async function loadOwnProfileIntoForm(){
   document.getElementById("btn-submit-prof").textContent = "Salva modifiche";
   document.getElementById("btn-logout").style.display = "inline-block";
 
+  currentProf = (!error && data) ? data : null;
   if(error || !data){
     editingProfId = null;
     document.getElementById("btn-submit-prof").textContent = "Crea il mio profilo";
@@ -814,9 +840,178 @@ function escapeHtml(s){ const d = document.createElement("div"); d.textContent =
   document.getElementById(id).addEventListener("input", loadResults);
 });
 
+/* ================= ANNUNCI ================= */
+function isMember(){ return !!(currentUser && currentProf && currentProf.membership_attiva); }
+function fmtDate(str){
+  try{ return new Date(str).toLocaleDateString("it-IT", { day:"numeric", month:"short" }); }catch(e){ return ""; }
+}
+populateFilterSelect("ann-tipo", TIPI_PAZIENTE);
+
+async function loadHomeAnnunci(){
+  const el = document.getElementById("home-annunci-list");
+  if(!CONFIGURED){ el.innerHTML = ""; return; }
+  const { data, error } = await sb.from("annunci").select("id,tipo_paziente,zona,created_at").eq("stato","aperto").order("created_at",{ascending:false}).limit(5);
+  if(error || !data || data.length === 0){
+    el.innerHTML = '<div style="padding:14px 0; font-size:13px; color:var(--ink-soft); border-top:1px solid var(--line);">Nessun annuncio pubblicato per ora.</div>';
+    return;
+  }
+  el.innerHTML = data.map(a => `
+    <div class="ann-mini" onclick="switchPanel('annunci')">
+      <div>
+        <div class="t">${escapeHtml(a.tipo_paziente)}</div>
+        <div class="z">📍 ${escapeHtml(a.zona)}</div>
+      </div>
+      <div class="d mono">${fmtDate(a.created_at)}</div>
+    </div>`).join("");
+}
+
+function toggleAnnForm(){
+  if(!currentUser){ showToast("Accedi per pubblicare un annuncio."); switchPanel("accedi"); return; }
+  if(!isMember()){ showToast("Serve una membership attiva per pubblicare annunci."); return; }
+  const f = document.getElementById("ann-form");
+  f.style.display = (f.style.display === "none") ? "block" : "none";
+}
+
+async function publishAnnuncio(){
+  if(!isMember()){ showToast("Serve una membership attiva per pubblicare annunci."); return; }
+  const tipo = document.getElementById("ann-tipo").value;
+  const zona = document.getElementById("ann-zona").value.trim();
+  const dettagli = document.getElementById("ann-dettagli").value.trim();
+  if(!tipo || !zona || !dettagli){ showToast("Compila tipo di paziente, zona e dettagli."); return; }
+
+  const { data: ann, error } = await sb.from("annunci").insert({ user_id: currentUser.id, tipo_paziente: tipo, zona }).select().single();
+  if(error){ showToast("Errore nella pubblicazione: " + error.message); return; }
+
+  const { error: e2 } = await sb.from("annunci_dettagli").insert({ annuncio_id: ann.id, user_id: currentUser.id, dettagli });
+  if(e2){
+    await sb.from("annunci").delete().eq("id", ann.id);
+    showToast("Errore nel salvataggio dei dettagli: " + e2.message);
+    return;
+  }
+
+  document.getElementById("ann-tipo").value = "";
+  document.getElementById("ann-zona").value = "";
+  document.getElementById("ann-dettagli").value = "";
+  document.getElementById("ann-form").style.display = "none";
+  showToast("Annuncio pubblicato.");
+  loadAnnunci();
+  loadHomeAnnunci();
+}
+
+async function loadAnnunci(){
+  const listEl = document.getElementById("ann-list");
+  const inEl = document.getElementById("ann-incoming");
+  inEl.innerHTML = "";
+  if(!requireConfig()){ listEl.innerHTML = '<div class="empty">Configura prima la connessione a Supabase.</div>'; return; }
+  listEl.innerHTML = '<div class="empty" style="grid-column:1/-1;">Caricamento...</div>';
+
+  const { data: anns, error } = await sb.from("annunci").select("*").eq("stato","aperto").order("created_at",{ascending:false});
+  if(error){ listEl.innerHTML = '<div class="empty" style="grid-column:1/-1;">Errore: ' + escapeHtml(error.message) + '</div>'; return; }
+  const list = anns || [];
+  if(list.length === 0){
+    listEl.innerHTML = '<div class="empty" style="grid-column:1/-1;">Nessun annuncio pubblicato per ora.</div>';
+    return;
+  }
+
+  const richiesteMap = {}, detailsMap = {}, authorsMap = {};
+  let incoming = [];
+  if(currentUser){
+    const ids = list.map(a => a.id);
+    const { data: mie } = await sb.from("annunci_richieste").select("annuncio_id,stato").eq("richiedente_id", currentUser.id).in("annuncio_id", ids);
+    (mie || []).forEach(r => { richiesteMap[r.annuncio_id] = r.stato; });
+    const { data: det } = await sb.from("annunci_dettagli").select("annuncio_id,dettagli").in("annuncio_id", ids);
+    (det || []).forEach(d => { detailsMap[d.annuncio_id] = d.dettagli; });
+    const approvedAuthors = list.filter(a => a.user_id !== currentUser.id && richiesteMap[a.id] === "approvata").map(a => a.user_id);
+    if(approvedAuthors.length){
+      const { data: auth } = await sb.from("professionisti").select("user_id,nome,email,telefono").in("user_id", approvedAuthors);
+      (auth || []).forEach(p => { authorsMap[p.user_id] = p; });
+    }
+    const myIds = list.filter(a => a.user_id === currentUser.id).map(a => a.id);
+    if(myIds.length){
+      const { data: inc } = await sb.from("annunci_richieste").select("*").in("annuncio_id", myIds).eq("stato","in attesa");
+      incoming = inc || [];
+    }
+  }
+
+  if(incoming.length){
+    const byId = {}; list.forEach(a => { byId[a.id] = a; });
+    inEl.innerHTML = `<div class="incoming-box"><strong style="color:var(--petrol-900);">Richieste di dettagli ricevute</strong>` +
+      incoming.map(r => {
+        const a = byId[r.annuncio_id];
+        return `<div class="incoming-row">
+          <span>${escapeHtml(r.richiedente_nome || "Un collega")} vuole i dettagli di: <em>${escapeHtml(a.tipo_paziente)} — ${escapeHtml(a.zona)}</em></span>
+          <span>
+            <button class="btn btn-primary btn-small" onclick="rispondiRichiesta('${r.id}','approvata')">Approva</button>
+            <button class="btn btn-ghost btn-small" onclick="rispondiRichiesta('${r.id}','rifiutata')">Rifiuta</button>
+          </span>
+        </div>`;
+      }).join("") + `</div>`;
+  }
+
+  listEl.innerHTML = list.map(a => {
+    const mine = currentUser && a.user_id === currentUser.id;
+    const stato = richiesteMap[a.id];
+    let action = "";
+    if(mine){
+      action = `<div class="ann-status">Il tuo annuncio</div>
+        ${detailsMap[a.id] ? `<div class="ann-detail">${escapeHtml(detailsMap[a.id])}</div>` : ""}
+        <button class="btn btn-ghost btn-small" onclick="chiudiAnnuncio('${a.id}')">Chiudi annuncio</button>`;
+    } else if(!currentUser){
+      action = `<button class="btn btn-ghost btn-small" onclick="switchPanel('accedi')">Accedi per richiedere i dettagli</button>`;
+    } else if(!isMember()){
+      action = `<div class="ann-status">Serve una membership attiva per richiedere i dettagli.</div>`;
+    } else if(stato === "approvata"){
+      const au = authorsMap[a.user_id];
+      action = `${detailsMap[a.id] ? `<div class="ann-detail">${escapeHtml(detailsMap[a.id])}</div>` : ""}
+        ${au ? `<div class="ann-status">Contatto: <strong>${escapeHtml(au.nome)}</strong> · <a href="mailto:${encodeURIComponent(au.email)}">${escapeHtml(au.email)}</a>${au.telefono ? " · " + escapeHtml(au.telefono) : ""}</div>` : ""}`;
+    } else if(stato === "in attesa"){
+      action = `<div class="ann-status">⏳ Richiesta inviata, in attesa di risposta.</div>`;
+    } else if(stato === "rifiutata"){
+      action = `<div class="ann-status">Richiesta non accolta.</div>`;
+    } else {
+      action = `<button class="btn btn-primary btn-small" onclick="richiediDettagli('${a.id}')">Richiedi i dettagli</button>`;
+    }
+    return `<div class="ann-card">
+      <div class="ann-tipo">${escapeHtml(a.tipo_paziente)}</div>
+      <div class="ann-zona">📍 ${escapeHtml(a.zona)}</div>
+      <div class="ann-date mono">${fmtDate(a.created_at)}</div>
+      ${action}
+    </div>`;
+  }).join("");
+}
+
+async function richiediDettagli(annId){
+  if(!isMember()){ showToast("Serve una membership attiva."); return; }
+  const { error } = await sb.from("annunci_richieste").insert({
+    annuncio_id: annId,
+    richiedente_id: currentUser.id,
+    richiedente_prof_id: currentProf.id,
+    richiedente_nome: currentProf.nome
+  });
+  if(error){ showToast("Errore: " + error.message); return; }
+  showToast("Richiesta inviata.");
+  loadAnnunci();
+}
+
+async function rispondiRichiesta(richiestaId, stato){
+  const { error } = await sb.from("annunci_richieste").update({ stato }).eq("id", richiestaId);
+  if(error){ showToast("Errore: " + error.message); return; }
+  showToast(stato === "approvata" ? "Richiesta approvata." : "Richiesta rifiutata.");
+  loadAnnunci();
+}
+
+async function chiudiAnnuncio(annId){
+  const { error } = await sb.from("annunci").update({ stato: "chiuso" }).eq("id", annId);
+  if(error){ showToast("Errore: " + error.message); return; }
+  showToast("Annuncio chiuso.");
+  loadAnnunci();
+  loadHomeAnnunci();
+}
+
 (async ()=>{
   const isReview = await initReviewPageIfNeeded();
   if(!isReview){
+    loadHomeAnnunci();
     loadResults();
     if(CONFIGURED){
       const { data: sessionData } = await sb.auth.getSession();
