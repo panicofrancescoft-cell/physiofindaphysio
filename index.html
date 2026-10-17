@@ -89,7 +89,7 @@
   .ann-mini .z{ font-size:12.5px; color:var(--ink-soft); }
   .ann-mini .d{ font-size:11px; color:var(--ink-soft); white-space:nowrap; }
 
-  .steps{ display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin-top:20px;}
+  .steps{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:20px;}
   .step{ border-top:2px solid var(--sage); padding-top:10px;}
   .step .num{ font-family:'IBM Plex Mono'; font-size:12px; color:var(--sage);}
   .step h3{ font-size:16px; margin-top:6px; color:var(--petrol-900);}
@@ -240,8 +240,9 @@
       </div>
 
       <div class="steps">
-        <div class="step"><div class="num mono">01</div><h3>Ti iscrivi</h3><p>Specializzazioni, area geografica, modalità di lavoro e pazienti che vuoi ricevere.</p></div>
-        <div class="step"><div class="num mono">02</div><h3>Vieni trovato</h3><p>Un collega ti cerca per filtri e ti contatta direttamente.</p></div>
+        <div class="step"><div class="num mono">01</div><h3>Iscriviti</h3><p>Ed entra nella rete di professionisti sanitari.</p></div>
+        <div class="step"><div class="num mono">02</div><h3>Cerca</h3><p>Il collega che fa al caso del tuo paziente.</p></div>
+        <div class="step"><div class="num mono">03</div><h3>Vieni trovato</h3><p>Un collega può trovarti nella rete in base alle tue caratteristiche e localizzazione.</p></div>
       </div>
 
     </div>
@@ -768,7 +769,7 @@ function renderHands(avg){
 async function getProfStats(profId){
   const { data: reviews } = await sb.from("recensioni").select("rating").eq("prof_id", profId);
   const { count: thanksCount } = await sb.from("ringraziamenti").select("*", { count: "exact", head: true }).eq("prof_id", profId);
-  const { count: confermateCount } = await sb.from("segnalazioni").select("*", { count: "exact", head: true }).eq("prof_id", profId).eq("stato", "confermata");
+  const { data: confermateCount } = await sb.rpc("conta_confermate", { p_prof: profId });
   const reviewCount = reviews ? reviews.length : 0;
   const ratingSum = reviews ? reviews.reduce((s,r)=>s+r.rating, 0) : 0;
   return { reviewCount, avgRating: reviewCount ? ratingSum/reviewCount : 0, thanksCount: thanksCount || 0, confermateCount: confermateCount || 0 };
@@ -1008,8 +1009,86 @@ async function chiudiAnnuncio(annId){
   loadHomeAnnunci();
 }
 
+/* ============ SEGNALAZIONI (conferma del paziente, senza compensi) ============ */
+async function creaSegnalazione(profId){
+  if(!currentUser){ showToast("Accedi per segnalare un paziente a un collega."); switchPanel("accedi"); return; }
+  if(!isMember()){ showToast("Serve una membership attiva per creare segnalazioni."); return; }
+  if(currentProf && currentProf.id === profId){ showToast("Non puoi segnalare un paziente a te stesso."); return; }
+
+  const { data, error } = await sb.from("segnalazioni").insert({
+    referrer_user_id: currentUser.id,
+    referrer_nome: currentProf.nome,
+    prof_id: profId
+  }).select().single();
+  if(error){ showToast("Errore: " + error.message); return; }
+
+  const url = location.origin + location.pathname + "?conferma=" + data.id;
+  navigator.clipboard.writeText(url).then(()=>{
+    showToast("Link copiato. Invialo al paziente: confermerà quando la prestazione è avvenuta.");
+  }).catch(()=>{
+    prompt("Copia questo link e invialo al paziente:", url);
+  });
+}
+
+let confirmId = null;
+let confirmPick = null;
+
+async function initConfirmPageIfNeeded(){
+  const id = new URLSearchParams(location.search).get("conferma");
+  if(!id) return false;
+  confirmId = id;
+
+  document.querySelector("header").style.display = "none";
+  document.querySelectorAll("main > section.panel").forEach(p=>p.classList.remove("active"));
+  document.getElementById("conferma").classList.add("active");
+
+  const wrap = document.getElementById("confirm-form-wrap");
+  const hideForm = () => wrap.querySelectorAll(".confirm-choice, .field, .btn").forEach(el => el.style.display = "none");
+  const title = document.getElementById("confirm-title");
+  const sub = document.getElementById("confirm-sub");
+
+  if(!CONFIGURED){ title.textContent = "Servizio non disponibile"; hideForm(); return true; }
+
+  const { data, error } = await sb.rpc("info_segnalazione", { p_id: id });
+  const row = (!error && data && data.length) ? data[0] : null;
+  if(!row){
+    title.textContent = "Link non valido";
+    sub.textContent = "Questo link non esiste o è scaduto.";
+    hideForm();
+    return true;
+  }
+  if(row.stato !== "in attesa"){
+    title.textContent = "Hai già risposto";
+    sub.textContent = "La tua risposta a questa segnalazione è già stata registrata. Grazie!";
+    hideForm();
+    return true;
+  }
+  title.textContent = "Il trattamento con " + row.prof_nome + " è stato effettuato?";
+  sub.textContent = "Il collega " + row.referrer_nome + " ti ha indirizzato a " + row.prof_nome + ". Conferma solo se hai davvero ricevuto la prestazione. Non ti chiediamo alcun dato personale.";
+  return true;
+}
+
+function pickConfirm(val){
+  confirmPick = val;
+  document.getElementById("confirm-yes-btn").classList.toggle("picked", val === true);
+  document.getElementById("confirm-no-btn").classList.toggle("picked", val === false);
+}
+
+async function submitConfirm(){
+  if(confirmPick === null){ showToast("Scegli una risposta: sì oppure no."); return; }
+  const commento = document.getElementById("confirm-comment").value.trim();
+  const { data, error } = await sb.rpc("conferma_segnalazione", { p_id: confirmId, p_confermata: confirmPick, p_commento: commento });
+  if(error){ showToast("Errore nell'invio: " + error.message); return; }
+  document.getElementById("confirm-form-wrap").style.display = "none";
+  const thanks = document.getElementById("confirm-thanks-wrap");
+  if(data === false){
+    thanks.querySelector("p").textContent = "Questa segnalazione aveva già ricevuto una risposta.";
+  }
+  thanks.style.display = "block";
+}
+
 (async ()=>{
-  const isReview = await initReviewPageIfNeeded();
+  const isReview = (await initReviewPageIfNeeded()) || (await initConfirmPageIfNeeded());
   if(!isReview){
     loadHomeAnnunci();
     loadResults();
